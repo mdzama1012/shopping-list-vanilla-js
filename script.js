@@ -146,7 +146,8 @@ function removeItem(event) {
 }
 
 function removeItems() {
-	if (!isEditMode && confirm('Are you sure, this will clear all list items.')) {
+	if (confirm('Are you sure, this will clear all list items.')) {
+		isEditMode && resetUI();
 		while (list.firstElementChild) {
 			list.firstElementChild.remove();
 		}
