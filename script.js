@@ -2,20 +2,55 @@ const form = document.getElementById('item-form');
 const list = document.getElementById('item-list');
 const searchBar = document.querySelector('.filter');
 const searchBarInput = document.querySelector('.form-input-filter');
+const itemInputField = document.querySelector('.form-control input');
+const submitButton = document.querySelector('.btn');
 const clearAllButton = document.getElementById('clear');
 let isEditMode = false;
+
+// function display items by fetching from local storage.
+function displayItems() {
+	getItemsFromLS().forEach(item => addItemToDOM(item));
+	resetUI();
+}
+
+// function to add/remove the search-bar & clear all button if there is not item.
+function resetUI() {
+	if (isEditMode) {
+		isEditMode = false;
+		submitButton.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`;
+		submitButton.style.backgroundColor = '#333';
+	}
+	// general rests.
+	if (list.firstElementChild) {
+		searchBar.classList.remove('hidden');
+		clearAllButton.classList.remove('hidden');
+	} else {
+		searchBar.classList.add('hidden');
+		clearAllButton.classList.add('hidden');
+	}
+	searchBarInput.value = '';
+	itemInputField.value = '';
+	itemInputField.blur();
+	searchBarInput.blur();
+	let listItem = list.firstElementChild;
+	while (listItem) {
+		listItem.classList.contains('edit-mode') &&
+			listItem.classList.remove('edit-mode');
+		listItem.classList.contains('hidden') &&
+			listItem.classList.remove('hidden');
+		listItem = listItem.nextElementSibling;
+	}
+}
 
 // function to add item to the local storage (if not present already)
 function addItemToLS(itemName) {
 	itemName = beautifyName(itemName).toLowerCase();
 	const itemsFromLS = getItemsFromLS();
 	if (itemsFromLS.includes(itemName)) {
-		// the item is already present.
 		return false;
 	}
 	itemsFromLS.push(itemName);
 	localStorage.setItem('items', JSON.stringify(itemsFromLS));
-	// new item is added to local storage.
 	return true;
 }
 
@@ -26,33 +61,15 @@ function getItemsFromLS() {
 		: [];
 }
 
-function removeItemFromLS(itemName) {
+function removeItemFromLS(element) {
 	// itemName is already beautify as it is fetched from DOM.
-	itemName = itemName.toLowerCase();
+	itemName = element.textContent.toLowerCase();
 	const remainingItems = getItemsFromLS().filter(item => item !== itemName);
 	remainingItems.length
 		? localStorage.setItem('items', JSON.stringify(remainingItems))
 		: localStorage.clear();
 }
 
-// function to add/remove the search-bar & clear all button if there is not item.
-function resetUI() {
-	if (list.firstElementChild) {
-		searchBar.classList.remove('hidden');
-		clearAllButton.classList.remove('hidden');
-	} else {
-		searchBar.classList.add('hidden');
-		clearAllButton.classList.add('hidden');
-	}
-}
-
-// function display items by fetching from local storage.
-function displayItems() {
-	getItemsFromLS().forEach(item => addItemToDOM(item));
-	resetUI();
-}
-
-// function to create a delete button for list item.
 function getDeleteButton() {
 	const button = document.createElement('button');
 	button.className = 'remove-item btn-link text-red';
@@ -62,7 +79,6 @@ function getDeleteButton() {
 	return button;
 }
 
-// function to beautify item name before inserting it to list.
 function beautifyName(itemName) {
 	const accumulate = [];
 	itemName
@@ -82,8 +98,7 @@ function addItemToDOM(itemName) {
 	list.appendChild(newItem);
 }
 
-// this function handle the submission of item form (mini form).
-function addItem(event) {
+function onSubmitAddItem(event) {
 	event.preventDefault();
 	// console.log(event.target);
 	// console.log(event.currentTarget);
@@ -91,81 +106,53 @@ function addItem(event) {
 	const itemName = formData.get('item');
 	if (itemName.trim().length < 1) {
 		alert('Please Provide Valid Item Name!');
-		return;
+		return false;
 	}
-
 	if (isEditMode) {
 		const editingItem = document.querySelector('.edit-mode');
-		removeListItem(editingItem);
+		removeItemFromLS(editingItem);
+		editingItem.remove();
 		addItemToLS(itemName);
 		addItemToDOM(itemName);
-		editingItem.classList.remove('edit-mode');
-		// console.log('exit edit mode!');
-		isEditMode = false;
-		const itemInputField = document.querySelector('.form-control input');
-		const submitButton = document.querySelector('.btn');
-		itemInputField.value = '';
-		itemInputField.blur();
-		// item.classList.remove('edit-mode');
-		submitButton.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`;
-		submitButton.style.backgroundColor = '#333';
-		return;
-	}
-
-	// item name is valid.
-	if (addItemToLS(itemName)) {
+	} else if (addItemToLS(itemName)) {
 		addItemToDOM(itemName);
-		resetUI();
 	}
-	document.querySelector('.form-control input').value = '';
+	return resetUI();
 }
 
 function setEditMode(item) {
+	resetUI();
 	isEditMode = true;
-	Array.from(list.children).forEach(listItem =>
-		listItem.classList.remove('edit-mode')
-	);
-	const itemInputField = document.querySelector('.form-control input');
-	const submitButton = document.querySelector('.btn');
+	item.classList.add('edit-mode');
+	submitButton.innerHTML = '<i class="fa-solid fa-pen"></i> Update Item';
+	submitButton.style.backgroundColor = '#00c04b';
 	itemInputField.value = item.textContent;
 	itemInputField.focus();
-	item.classList.add('edit-mode');
-	submitButton.innerHTML = `<i class="fa-solid fa-pen"></i> Update Item`;
-	submitButton.style.backgroundColor = '#00c04b';
 }
 
-// remove item helper
-function removeListItem(item) {
-	removeItemFromLS(item.textContent);
-	item.remove();
-}
-
-// remove single item from the list.
 function removeItem(event) {
-	const target = event.target;
+	const targetElement = event.target;
+	const removeElement = targetElement.parentElement.parentElement;
 	if (
-		target.tagName === 'I' &&
-		!target.parentElement.parentElement.classList.contains('edit-mode')
+		targetElement.tagName === 'I' &&
+		!removeElement.classList.contains('edit-mode')
 	) {
-		removeListItem(target.parentElement.parentElement);
-	} else if (target.tagName === 'LI') {
-		setEditMode(target);
+		removeItemFromLS(removeElement);
+		removeElement.remove();
+		!isEditMode && resetUI();
+	} else if (targetElement.tagName === 'LI') {
+		setEditMode(targetElement);
 	}
-	resetUI();
 }
 
-// removes all items from the list.
 function removeItems() {
-	if (isEditMode) {
-		return;
-	}
-	if (confirm('Are you sure, this will clear all list items.')) {
+	if (!isEditMode && confirm('Are you sure, this will clear all list items.')) {
 		while (list.firstElementChild) {
 			list.firstElementChild.remove();
 		}
 		localStorage.clear();
+		resetUI();
 	}
-	resetUI();
 }
 
 // Applies a danger highlight effect to the list item to indicate it may be removed.
@@ -200,7 +187,7 @@ function searchItem(event) {
 }
 
 // Event Listeners
-form.addEventListener('submit', addItem);
+form.addEventListener('submit', onSubmitAddItem);
 clearAllButton.addEventListener('click', removeItems);
 list.addEventListener('click', removeItem);
 list.addEventListener('mouseover', highlightForRemoval);
