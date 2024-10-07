@@ -58,9 +58,13 @@ header h1 {
 	margin-bottom: 20px;
 	padding: 10px;
 	border: none;
-	border-bottom: 1.25px solid #ccc;
+	border-bottom: 1.5px solid #ccc;
 	background: transparent;
 	outline: none;
+}
+
+.form-input-filter:focus {
+	border-bottom: 1.5px solid #a3d9f3;
 }
 
 /* Buttons */
@@ -101,7 +105,7 @@ header h1 {
 	font-size: 16px;
 	background-color: transparent;
 	color: #333;
-	border: 1px solid #ccc;
+	border: 1.25px solid #ccc;
 	border-radius: 5px;
 	padding: 10px 20px;
 	cursor: pointer;
@@ -136,7 +140,6 @@ header h1 {
 }
 
 /* For Javascript */
-
 .item-danger {
 	background-color: #fae0e4;
 	transition: all 0.5s ease;
