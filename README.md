@@ -4,7 +4,8 @@ A simple shopping list application built with vanilla JavaScript. This project a
 
 ## Screenshot
 
-![Shopping List Screenshot](img/screenshot.png)
+<img src="img/screenshot2.png" width="180">
+<img src="img/screenshot1.png" width="180">
 
 ## Features
 
