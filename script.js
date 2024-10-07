@@ -4,6 +4,7 @@ const searchBar = document.querySelector('.filter');
 const searchBarInput = document.querySelector('.form-input-filter');
 const itemInputField = document.querySelector('.form-control input');
 const submitButton = document.querySelector('.btn');
+const cancelEditButton = document.querySelector('.cancel-edit');
 const clearAllButton = document.getElementById('clear');
 let isEditMode = false;
 
@@ -17,6 +18,7 @@ function displayItems() {
 function resetUI() {
 	if (isEditMode) {
 		isEditMode = false;
+		cancelEditButton.classList.add('hidden');
 		submitButton.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`;
 		submitButton.style.backgroundColor = '#333';
 	}
@@ -123,6 +125,7 @@ function onSubmitAddItem(event) {
 function setEditMode(item) {
 	resetUI();
 	isEditMode = true;
+	cancelEditButton.classList.remove('hidden');
 	item.classList.add('edit-mode');
 	submitButton.innerHTML = '<i class="fa-solid fa-pen"></i> Update Item';
 	submitButton.style.backgroundColor = '#00c04b';
@@ -194,4 +197,5 @@ list.addEventListener('click', removeItem);
 list.addEventListener('mouseover', highlightForRemoval);
 list.addEventListener('mouseout', removeHighlight);
 searchBarInput.addEventListener('input', searchItem);
+cancelEditButton.addEventListener('click', resetUI);
 document.addEventListener('DOMContentLoaded', displayItems);
