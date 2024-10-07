@@ -40,9 +40,15 @@ header h1 {
 	font-size: 18px;
 	margin-bottom: 20px;
 	padding: 10px;
-	border: 1px solid #ccc;
+	border: 1.5px solid #ccc;
 	border-radius: 5px;
 	outline: none;
+}
+
+.form-input:focus {
+	outline: none;
+	border: 1.5px solid #a3d9f3;
+	box-shadow: 0 0 7px rgba(163, 217, 243, 0.5);
 }
 
 .form-input-filter {
@@ -52,7 +58,7 @@ header h1 {
 	margin-bottom: 20px;
 	padding: 10px;
 	border: none;
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1.25px solid #ccc;
 	background: transparent;
 	outline: none;
 }
@@ -112,7 +118,6 @@ header h1 {
 }
 
 /* Items */
-
 .items {
 	margin-top: 20px;
 	display: flex;
@@ -123,18 +128,18 @@ header h1 {
 	display: flex;
 	justify-content: space-between;
 	width: 45%;
-	border: 1px solid #ccc;
+	border: 1.25px solid #ccc;
 	border-radius: 5px;
 	padding: 10px 15px;
 	margin: 0 5px 20px;
 	font-weight: 700;
 }
 
-/* My Adding */
+/* For Javascript */
 
 .item-danger {
 	background-color: #fae0e4;
-	transition: all 0.7s ease;
+	transition: all 0.5s ease;
 }
 
 .hidden {
@@ -142,7 +147,7 @@ header h1 {
 }
 
 .edit-mode {
-	opacity: 0.45;
+	opacity: 0.3;
 }
 
 @media (max-width: 500px) {
