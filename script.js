@@ -114,9 +114,8 @@ function onSubmitAddItem(event) {
 		const editingItem = document.querySelector('.edit-mode');
 		removeItemFromLS(editingItem);
 		editingItem.remove();
-		addItemToLS(itemName);
-		addItemToDOM(itemName);
-	} else if (addItemToLS(itemName)) {
+	}
+	if (addItemToLS(itemName)) {
 		addItemToDOM(itemName);
 	}
 	return resetUI();
