@@ -1,6 +1,6 @@
 # Shopping List Project
 
-A simple shopping list application built with vanilla JavaScript. This project allows users to manage a list of grocery items by adding, editing, removing, and searching items. The app persists data using `localStorage`, making the list available even after closing or refreshing the browser.
+A simple shopping list application built with vanilla JavaScript. This project allows users to manage a list of grocery items by adding, editing, removing, and searching items. The app persists data using `localStorage`, making the list available even after closing or refreshing the browser. You can take a live demo from this [link.](https://shopping-vanilla-js.netlify.app/)
 
 ## Features
 
