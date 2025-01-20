@@ -26,3 +26,6 @@ To run the project locally:
    git clone https://github.com/mdzama1012/shopping-list-vanilla-javascript.git
    cd shopping-list
    ```
+
+Happy Coding!
+
